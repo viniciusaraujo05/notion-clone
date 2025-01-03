@@ -1,24 +1,29 @@
-import mongoose, { Schema, Document } from 'mongoose';
+import mongoose, { Document, Schema } from 'mongoose';
 
-// Interface para representar um documento
-export interface IDocumentSimple extends Document {
+export interface Block {
+    type: string;
+    content: Record<string, unknown>;
+    order: number;
+}
+
+export interface IDocument extends Document {
     title: string;
-    content: string;
+    blocks: Block[];
     createdAt: Date;
     updatedAt: Date;
 }
 
-const DocumentSchemaSimple: Schema = new Schema({
-    title: {
-        type: String,
-        required: true,
-    },
-    content: {
-        type: String,
-        required: true,
-    }
-}, {
-    timestamps: true
+const BlockSchema = new Schema<Block>({
+    type: { type: String, required: true },
+    content: { type: Schema.Types.Mixed },
+    order: { type: Number, default: 0 },
 });
 
-export const DocumentModelSimple = mongoose.model<IDocumentSimple>('DocumentSimple', DocumentSchemaSimple);
+const DocumentSchema = new Schema<IDocument>({
+    title: { type: String, required: true },
+    blocks: [BlockSchema],
+    createdAt: { type: Date, default: Date.now },
+    updatedAt: { type: Date, default: Date.now },
+});
+
+export const DocumentModel = mongoose.model<IDocument>('Document', DocumentSchema);

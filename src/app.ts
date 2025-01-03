@@ -1,5 +1,5 @@
 import express from 'express';
-import { router } from './routes/api';
+import { documentRouter } from './routes/documentRoutes';
 
 const app = express();
 
@@ -8,9 +8,6 @@ app.use(express.json());
 app.use(require('cors')());
 
 // Rotas
-app.use('/', (req, res) => {
-    res.json({ message: 'API is working' });
-});
-
+app.use(documentRouter);
 
 export { app };
